@@ -1,0 +1,226 @@
+/* 🔹 General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* 🔹 Header Styles */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #2c3e50;
+    color: white;
+    padding: 15px 20px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.menu-icon {
+    cursor: pointer;
+    font-size: 24px;
+    display: block;
+}
+
+/* 🔹 Authentication Buttons */
+.auth-buttons a {
+    color: white;
+    text-decoration: none;
+    margin-left: 15px;
+    background: #e74c3c;
+    padding: 8px 15px;
+    border-radius: 5px;
+}
+
+/* 🔹 Search Bar */
+.search-bar input {
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+}
+
+.search-bar button {
+    padding: 8px;
+    border: none;
+    background: #3498db;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* 🔹 Sidebar Styles */
+.sidebar {
+    position: fixed;
+    left: -250px;
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background: #333;
+    color: white;
+    padding-top: 60px;
+    transition: 0.3s;
+    overflow-y: auto;
+}
+
+.sidebar.active {
+    left: 0;
+}
+
+.sidebar a {
+    display: block;
+    padding: 10px;
+    color: white;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.sidebar a:hover {
+    background: #575757;
+}
+
+/* 🔹 Ads Section */
+.ads-section {
+    margin-top: 80px;
+    text-align: center;
+    background: white;
+    padding: 20px;
+}
+
+.ads-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.ad-box img {
+    width: 150px;
+    height: auto;
+    border-radius: 5px;
+}
+
+/* 🔹 Books Grid */
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+    justify-content: center;
+}
+
+/* 🔹 Book Card */
+.book-card {
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+    width: 180px;
+}
+
+.book-card:hover {
+    transform: scale(1.05);
+}
+
+.book-card img {
+    width: 150px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
+}
+
+.book-card h3 {
+    margin: 10px 0;
+    font-size: 18px;
+}
+
+.book-card p {
+    color: #555;
+}
+
+/* 🔹 Responsive Design */
+@media (max-width: 768px) {
+    .books-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+
+    .ads-container {
+        flex-direction: column;
+    }
+
+    .book-card {
+        width: 100%;
+    }
+
+    .book-card img {
+        width: 100%;
+        height: auto;
+    }
+}
+.ads-section {
+    background: #f8f8f8;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.display-ads, .search-ad, .video-ad, .product-ad, .sponsored-brands, .sponsored-products {
+    margin: 15px 0;
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.video-ad video {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.sponsored-brands img, .sponsored-products img, .product-ad img {
+    width: 120px;
+    height: auto;
+    margin: 10px;
+}
+
+.brand, .product {
+    display: inline-block;
+    margin: 10px;
+}
+.total-books {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    background: #3498db;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-left: 15px;
+}
+.footer {
+  background: #2c3e50;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+}
+.footer ul {
+  list-style: none;
+  padding: 0;
+}
+.footer li {
+  display: inline-block;
+  margin: 5px 15px;
+}

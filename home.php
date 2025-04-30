@@ -1,0 +1,247 @@
+<?php
+session_start();
+include 'db_connect.php'; // Database Connection
+
+$isLoggedIn = isset($_SESSION['user_id']);
+
+// 🔹 Fetch Total Books Count
+$total_books_query = "SELECT COUNT(*) AS total_books FROM books";
+$total_books_result = mysqli_query($conn, $total_books_query);
+$total_books_row = mysqli_fetch_assoc($total_books_result);
+$total_books = $total_books_row['total_books'];
+// ✅ **2️⃣ Fetch Books Count by Subject**
+$book_count_by_subject = [];
+$subject_query = "SELECT subject, COUNT(*) AS count FROM books GROUP BY subject";
+$subject_result = mysqli_query($conn, $subject_query);
+
+while ($row = mysqli_fetch_assoc($subject_result)) {
+    $book_count_by_subject[$row['subject']] = $row['count'];
+}
+
+// 🔹 Fetch Latest Published Books (Latest 6 Books)
+$recent_query = "SELECT * FROM books ORDER BY id DESC LIMIT 6";
+$recent_books = mysqli_query($conn, $recent_query);
+
+// 🔹 Fetch Overall Trending Books (Top 10 Most Liked)
+$trending_query = "SELECT * FROM books ORDER BY likes DESC LIMIT 10";
+$trending_books = mysqli_query($conn, $trending_query);
+
+// 🔹 Fetch Trending Books for Specific Languages (Top 2 Books per Language)
+$languages =$world_languages = [
+    "Afrikaans", "Albanian", "Amharic", "Arabic", "Armenian", "Aymara", "Azerbaijani",
+    "Balinese", "Basque", "Belarusian", "Bosnian", "Breton", "Bulgarian", "Burmese",
+    "Cantonese", "Catalan", "Cebuano", "Chamorro", "Chechen", "Chinese (Mandarin)", 
+    "Cornish", "Corsican", "Crimean Tatar", "Croatian", "Czech", "Danish", "Dari",
+    "Dutch", "Dzongkha", "English", "Esperanto", "Estonian", "Ewe", "Faroese",
+    "Farsi (Persian)", "Fijian", "Filipino", "Finnish", "Flemish", "French", "Frisian",
+    "Galician", "Georgian", "German", "Greek", "Greenlandic", "Guarani", "Haitian Creole",
+    "Hakka Chinese", "Hausa", "Hawaiian", "Hebrew", "Hmong", "Hungarian", "Icelandic",
+    "Igbo", "Ilocano", "Indonesian", "Inuktitut", "Irish", "Italian", "Japanese",
+    "Javanese", "Kazakh", "Kinyarwanda", "Komi", "Korean", "Kurdish", "Kyrgyz",
+    "Ladino", "Lao", "Latin", "Latvian", "Limburgish", "Lingala", "Lithuanian",
+    "Lombard", "Luganda", "Luxembourgish", "Macedonian", "Malay", "Malagasy",
+    "Maltese", "Mayan", "Mongolian", "Montenegrin", "Nahuatl", "Navajo", "Norwegian",
+    "Oghuz", "Ojibwe", "Pashto", "Polish", "Portuguese", "Quechua", "Romanian",
+    "Romani", "Russian", "Samoan", "Sanskrit", "Sardinian", "Scottish Gaelic",
+    "Serbian", "Shona", "Sinhala", "Sino-Tibetan", "Slovak", "Slovene", "Somali",
+    "Spanish", "Sundanese", "Swahili", "Swedish", "Swiss German", "Tagalog", "Tajik",
+    "Tamashek", "Tatar", "Tetum", "Thai", "Tibetan", "Tigrinya", "Tok Pisin", "Tongan",
+    "Tswana", "Turkish", "Turkmen", "Twi", "Uighur", "Ukrainian", "Uzbek",
+    "Vietnamese", "Welsh", "Wolof", "Xhosa", "Yiddish", "Yoruba", "Zulu","Ahirani", "Angika", "Assamese", "Awadhi", "Bagheli", "Bagri", "Banjari",
+    "Bengali", "Bhadrawahi", "Bhojpuri", "Bodo/Boro", "Bhili/Bhilodi",
+    "Bishnupriya Manipuri", "Brajbhasha", "Bundi", "Chambeali", "Chhattisgarhi",
+    "Dakhini", "Darai", "Dhundhari", "Dogri", "Garhwali", "Garo", "Gondi",
+    "Gujarati", "Hara/Harauti", "Haryanvi", "Hindi", "Ho", "Kachchhi", "Kannada",
+    "Kashmiri", "Khasi", "Khortha/Khotta", "Kinnauri", "Kokborok", "Konkani",
+    "Kurukh/Oraon", "Ladakhi", "Lambani/Lambadi", "Lepcha", "Maithili",
+    "Magahi", "Malvi", "Manipuri (Meitei)", "Marathi", "Marwari", "Mewari",
+    "Mizo (Lushai)", "Mundari", "Nagpuri", "Nepali", "Nimadi", "Odia", "Pahari",
+    "Pali", "Punjabi", "Rajasthani", "Sadan/Sadri", "Sambalpuri", "Santali",
+    "Sindhi", "Surgujia", "Surjapuri", "Tamil", "Telugu", "Tulu", "Urdu", "Wagdi"
+];
+
+
+$trending_books_by_language = [];
+
+foreach ($languages as $lang) {
+    $safe_lang = mysqli_real_escape_string($conn, $lang);
+    $query = "SELECT * FROM books WHERE language = '$safe_lang' ORDER BY likes DESC LIMIT 2";
+    $trending_books_by_language[$lang] = mysqli_query($conn, $query);
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BookMahal - Home</title>
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    function toggleMenu() {
+      var sidebar = document.getElementById("sidebar");
+      sidebar.classList.toggle("active");
+    }
+  </script>
+</head>
+<body>
+
+  <!-- 🔹 Fixed Header -->
+  <header class="header">
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+    <h1 class="logo">BookMahal</h1>
+    <div class="search-bar">
+      <form action="search.php" method="GET">
+        <input type="text" name="query" placeholder="Search books..." required>
+        <button type="submit">Search</button>
+      </form>
+    </div>
+      <div class="total-books">
+        📚 Total Books: <strong><?php echo $total_books; ?></strong>
+    </div>
+    <div class="auth-buttons">
+      <?php if ($isLoggedIn): ?>
+        <a href="profile.php" class="btn">Profile</a>
+        <a href="logout.php" class="btn">Logout</a>
+      <?php else: ?>
+        <a href="register.html" class="btn">Register</a>
+        <a href="login.html" class="btn">Login</a>
+      <?php endif; ?>
+    </div>
+  </header>
+
+  <!-- 🔹 Sidebar Menu -->
+  <div id="sidebar" class="sidebar">
+    <a href="home.php">🏠 Home</a>
+    <a href="my_orders.php"> 📦 my order</a>
+    <a href="profile.php">👤 Profile</a>
+    <a href="create_biography_page.php">🔥Biography</a>
+    <a href="subject.php">📚 Subjects </a>
+    <?php if ($isLoggedIn): ?> 
+      <a href="mybooks.php">📂 My Books</a>
+      <a href="reading_history.php">📖 Reading History</a>
+      <a href="settings.php">⚙️ Settings</a>
+      <a href="logout.php">🚪 Logout</a>
+    <?php else: ?>
+      <a href="login.html">🔑 Login</a>
+      <a href="register.html">📝 Register</a>
+    <?php endif; ?>
+
+    <a href="about.html">ℹ️ About Us</a>
+    <a href="help.php">📩 help & support </a>
+  </div>
+
+
+  <!-- 🔹 Ads Section (Only show if Ads are enabled) -->
+  <?php if (isset($ads_enabled) && $ads_enabled): ?>
+  <div class="ads-section">
+    <h2>📢 Sponsored Ads</h2>
+    
+    <!-- 🔹 Google AdSense Ads -->
+    <div class="search-ad">
+        <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
+            data-ad-slot="XXXXXXX"
+            data-ad-format="horizontal">
+        </ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <div class="display-ads">
+        <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
+            data-ad-slot="XXXXXXX"
+            data-ad-format="auto">
+        </ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <!-- 🔹 Affiliate Product Ads -->
+    <div class="product-ad">
+        <a href="https://www.amazon.com/dp/B08XYZ123" target="_blank">
+            <img src="ads/amazon-product.jpg" alt="Amazon Product Ad">
+        </a>
+    </div>
+  </div>
+  <?php endif; ?>
+  <!-- 🔹 Latest Published Books -->
+  <main>
+    <h2>Latest Published Books</h2>
+    <div class="books-grid">
+      <?php while ($book = mysqli_fetch_assoc($recent_books)): ?>
+        <div class="book-card">
+          <a href="view.php?id=<?php echo $book['id']; ?>">
+            <img src="<?php echo htmlspecialchars($book['cover']); ?>" alt="Book Cover">
+            <h3><?php echo htmlspecialchars($book['title']); ?></h3>
+            <p>By <?php echo htmlspecialchars($book['author']); ?></p>
+          </a>
+        </div>
+      <?php endwhile; ?>
+    </div>
+
+    <!-- 🔹 Overall Trending Books -->
+    <h2>Trending Books</h2>
+    <div class="books-grid">
+      <?php while ($book = mysqli_fetch_assoc($trending_books)): ?>
+        <div class="book-card">
+          <a href="view.php?id=<?php echo $book['id']; ?>">
+            <img src="<?php echo htmlspecialchars($book['cover']); ?>" alt="Book Cover">
+            <h3><?php echo htmlspecialchars($book['title']); ?></h3>
+            <p>By <?php echo htmlspecialchars($book['author']); ?></p>
+          </a>
+        </div>
+      <?php endwhile; ?>
+    </div>
+
+    <!-- 🔹 Books by Language -->
+    <?php foreach ($languages as $lang): ?>
+      <?php if (isset($trending_books_by_language[$lang]) && mysqli_num_rows($trending_books_by_language[$lang]) > 0): ?>
+        <h2>Trending Books in <?php echo $lang; ?></h2>
+        <div class="books-grid">
+          <?php while ($book = mysqli_fetch_assoc($trending_books_by_language[$lang])): ?>
+            <div class="book-card">
+              <a href="view.php?id=<?php echo $book['id']; ?>">
+                <img src="<?php echo htmlspecialchars($book['cover']); ?>" alt="Book Cover">
+                <h3><?php echo htmlspecialchars($book['title']); ?></h3>
+                <p>By <?php echo htmlspecialchars($book['author']); ?></p>
+              </a>
+            </div>
+          <?php endwhile; ?>
+        </div>
+      <?php endif; ?>
+    <?php endforeach; ?>
+  </main>
+
+ <footer class="footer">
+    <div class="footer-content">
+        <h3>📚 Total Books: <?php echo $total_books; ?></h3>
+    <h3>🌎 Total Languages Supported: <?php echo count($languages); ?></h3>
+    <ul>
+    <h3>📚 Books Available Per Subject:</h3>
+        <div class="scrolling-box">
+            <ul>
+                <?php if (!empty($book_count_by_subject)): ?>
+                    <?php foreach ($book_count_by_subject as $subject => $count): ?>
+                        <li><?php echo htmlspecialchars($subject) . ": " . $count . " books"; ?></li>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <li>🚨 No books available yet.</li>
+                <?php endif; ?>
+            </ul>
+        <div class="language-list">
+            <?php if (!empty($book_count_by_language)): ?>
+                <?php foreach ($book_count_by_language as $lang => $count): ?>
+                    <span class="lang-badge"><?php echo htmlspecialchars($lang); ?> (<?php echo $count; ?>)</span>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>🚨 No books available yet.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+</footer>

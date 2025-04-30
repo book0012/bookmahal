@@ -1,0 +1,162 @@
+/* Global Styles */
+body {
+            font-family: Arial, sans-serif;
+            background-color: dimgrey;
+            margin: 0;
+            padding: 0;
+        }
+
+/* Header */
+  /* 📌 Header Styling */
+.fixed-header {
+    background-color: #222; /* डार्क बैकग्राउंड */
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 📌 Navigation Buttons */
+.fixed-header nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* 📌 Hover Effect */
+.fixed-header nav a:hover {
+    background-color: #ff6600; /* ऑरेंज बैकग्राउंड */
+    color: black;
+}
+
+/* 📌 Active Button */
+.fixed-header nav a.active {
+    background-color: #ffcc00; /* पीला */
+    color: black;
+    border-radius: 5px;
+}
+ 
+  .menu-icon {
+    cursor: pointer;
+    font-size: 24px;
+    display: block;
+}
+
+/* Main Content */
+main {
+    margin-top: 80px;
+    padding: 20px;
+}
+.content {
+    display: flex;
+    gap: 25px;
+    margin-top: 80px;
+    align-items: center;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+.book-cover {
+    width: 150px;
+    margin-right: 20px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Upload Section */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+input, select, button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+button {
+    background: #0056b3;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+button:hover {
+    background: white;
+}
+
+/* Media Sections */
+.media-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.video-section, .audio-section {
+    flex: 1;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    min-width: 300px;
+}
+
+.media-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+.media-profile {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Buttons */
+.edit-btn {
+    background: #f0ad4e;
+}
+.edit-btn:hover {
+    background: #d6892b;
+}
+.play-btn {
+    background: #28a745;
+}
+.play-btn:hover {
+    background: #1f8a35;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .content {
+        flex-direction: column;
+        text-align: center;
+    }
+    .media-container {
+        flex-direction: column;
+    }
+}
+

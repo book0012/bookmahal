@@ -1,0 +1,46 @@
+body {
+    font-family: Arial, sans-serif;
+    background: url('images/ideal_person_bg.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.biography-container {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    margin: auto;
+    margin-top: 50px;
+}
+
+h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.books-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.book-card {
+    background: white;
+    color: black;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px;
+    width: 200px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.book-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 5px;
+}
